@@ -35,6 +35,19 @@ services:
       - OLLAMA_ORIGINS=*
     restart: unless-stopped
     
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    volumes:
+       - postgres_data:/data/postgres
+    networks:
+      - n8n-network
+    restart: unless-stopped    
+    
   n8n:
     image: docker.n8n.io/n8nio/n8n
     restart: always
@@ -74,6 +87,7 @@ volumes:
   n8n_data:
   traefik_data:
   ollama_data:
+  postgres_data:
   
 networks:
   n8n-network:
