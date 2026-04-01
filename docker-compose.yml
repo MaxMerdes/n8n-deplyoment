@@ -16,10 +16,25 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    networks:
+      - n8n-network
     volumes:
       - traefik_data:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
-
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    networks:
+      - n8n-network
+    ports:
+      - "8080:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=*
+    restart: unless-stopped
+    
   n8n:
     image: docker.n8n.io/n8nio/n8n
     restart: always
@@ -40,6 +55,8 @@ services:
       - traefik.http.middlewares.n8n.headers.STSIncludeSubdomains=true
       - traefik.http.middlewares.n8n.headers.STSPreload=true
       - traefik.http.routers.n8n.middlewares=n8n@docker
+    networks:
+      - n8n-network
     environment:
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       - N8N_HOST=${SUBDOMAIN}.${DOMAIN_NAME}
@@ -56,3 +73,7 @@ services:
 volumes:
   n8n_data:
   traefik_data:
+  
+networks:
+  n8n-network:
+    driver: bridge
