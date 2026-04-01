@@ -73,6 +73,7 @@ services:
 volumes:
   n8n_data:
   traefik_data:
+  ollama_data:
   
 networks:
   n8n-network:
