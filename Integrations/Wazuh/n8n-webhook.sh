@@ -13,7 +13,7 @@ SRC_IP=$(echo "$INPUT_JSON" | jq -r '.parameters.alert.data.srcip // empty')
 FULL_LOG=$(echo "$INPUT_JSON" | jq -r '.parameters.alert.full_log')
 
 # Curl Request an n8n oder direkt an PostgreSQL Webhook
-curl -X POST https://dein-endpoint/api \
+curl -k -X POST https://dein-endpoint/api \
   -H "Content-Type: application/json" \
   -d "{
         \"rule_id\": \"$RULE_ID\",
